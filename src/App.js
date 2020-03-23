@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import {BrowserRouter, Switch, Route} from "react-router-dom"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import CreateEvent from "./CreateEvent"
+import Overview from "./Overview"
+import CreateMessage from "./CreateMessage"
+
+const App = () => {
+
+    return (
+        <div className="container">
+            <div className="jumbotron my-5 shadow-sm">
+                <h1 className="display-4 my-auto ml-5">BWI Übersicht</h1>
+            </div>
+
+            <BrowserRouter>
+                <Switch>
+                    <Route path="/add/event">
+                        <CreateEvent />
+                    </Route>
+
+                    <Route path="/add/message">
+                        <CreateMessage />
+                    </Route>
+
+                    <Route path="/">
+                        <Overview />
+                    </Route>
+                </Switch>
+            </BrowserRouter>
+        </div>
+    )
 }
 
-export default App;
+export default App
