@@ -1,6 +1,5 @@
 import React, {useState} from "react"
 import { firestore } from "firebase"
-import { DatePicker } from "antd"
 
 import { db } from "./firebase"
 import {Link} from "react-router-dom"
@@ -55,12 +54,7 @@ const CreateEvent = () => {
                     <div className="form-group">
                         <label htmlFor="deadline">Fälligkeitsdatum</label>
                         <div className="d-block w-100">
-                            <DatePicker id="deadline" name="deadline" selected={ values.deadline } onChange={ (date, dateString) => handleChange({
-                                target: {
-                                    name: "deadline",
-                                    value: date
-                                }
-                            }) } disabled={ submitted } required={ true } showTime/>
+                            <input id="deadline" name="deadline" type="datetime-local" value={ values.deadline } onChange={ handleChange } disabled={ submitted } required={ true } className="form-control"/>
                         </div>
                     </div>
 

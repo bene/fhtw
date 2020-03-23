@@ -94,7 +94,7 @@ const Overview = () => {
 
     return (
         <div className="row">
-            <div className="col-12 col-md-8 mb-3 mb-md-0">
+            <div className="col-12 col-md-8 mb-3 mb-md-0 order-2 order-md-1">
                 <div className="d-flex flex-row justify-content-between mb-3">
                     <h2 className="m-0">Deadlines</h2>
                     <div className="my-auto">
@@ -110,7 +110,7 @@ const Overview = () => {
                 { eventHistoryViews }
             </div>
 
-            <div className="col-12 col-md-4">
+            <div className="col-12 col-md-4 order-1 order-md-2">
                 <div className="d-flex flex-row justify-content-between mb-3">
                     <h2 className="m-0">Nachrichten</h2>
                     <div className="my-auto">
