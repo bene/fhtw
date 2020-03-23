@@ -17,7 +17,7 @@ const Overview = () => {
     const [messages, setMessages] = useState([])
 
     useEffect(() => {
-        db.collection("Events").orderBy("deadline", "asc").get().then((snapshot) => {
+        db.collection("Events").orderBy("deadline", "asc").onSnapshot(snapshot => {
 
             snapshot.forEach((doc) => {
 
@@ -25,14 +25,11 @@ const Overview = () => {
                 event.id = doc.id
                 event.deadline = moment(event.deadline.toDate())
 
-                setEvents(events => [
-                    ...events,
-                    event
-                ])
+                setEvents(events => events.every(e => e.id !== event.id) ? [...events, event] : events)
             })
         })
 
-        db.collection("Messages").orderBy("date", "desc").get().then((snapshot) => {
+        db.collection("Messages").orderBy("date", "desc").onSnapshot(snapshot => {
 
             snapshot.forEach((doc) => {
 
@@ -40,10 +37,7 @@ const Overview = () => {
                 message.id = doc.id
                 message.date = moment(message.date.toDate())
 
-                setMessages(messages => [
-                    ...messages,
-                    message
-                ])
+                setMessages(messages => messages.every(m => m.id !== message.id) ? [...messages, message] : messages)
             })
         })
 
