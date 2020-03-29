@@ -47,14 +47,19 @@ const CreateEvent = () => {
 
         const coll = db.collection("Events")
 
-        if (!!values.id) {
+        if (!!eventId) {
+            console.log("Set")
             coll.doc(values.id).set(values).then((ref) => {
                 alert("Die Deadline sollte hinzugefügt sein.")
             }).catch(err => {
                 alert("Fehler: " + err.toString())
             })
         } else {
-            coll.add(values).then((ref) => {
+            delete values.id
+            console.log(values)
+            coll.add({
+                ...values
+            }).then((ref) => {
                 alert("Die Deadline sollte hinzugefügt sein.")
             }).catch(err => {
                 alert("Fehler: " + err.toString())
