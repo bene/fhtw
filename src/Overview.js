@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import {Link} from "react-router-dom"
-import 'moment/locale/de';
+import moment from "moment"
+import "moment/locale/de";
 
 import { db } from "./firebase"
 import IconAdd from "./img/plus-circle.svg"
-import moment from "moment"
+import IconEdit from "./img/edit.svg"
 
 
 moment.locale('de');
@@ -48,7 +49,12 @@ const Overview = () => {
             <div className="card-header">
                 <div className="d-flex flex-row justify-content-between">
                     <span className="h5 m-0">{ e.name || INVALID }</span>
-                    <span className="h5 m-0">{ e.subject || INVALID }{ !!e.group ? ` (${ e.group })` : "" }</span>
+                    <div className="d-flex">
+                        <span className="h5 m-0">{ e.subject || INVALID }{ !!e.group ? ` (${ e.group })` : "" }</span>
+                        <Link to={`/events/edit/${ e.id }`} role="button" className="my-auto ml-2">
+                            <img src={ IconEdit } alt="Add" width="16px" />
+                        </Link>
+                    </div>
                 </div>
             </div>
             <div className="card-body">
@@ -62,11 +68,16 @@ const Overview = () => {
     ))
 
     const eventHistoryViews = events.filter(e => e.deadline.isBefore(moment())).map(e => (
-        <div key={ e.id || "" } className={`card mb-3 shadow-sm ${ moment.duration(e.deadline.diff(moment())).asHours() > 6 ? "bg-danger text-white" : "" }`}>
+        <div key={ e.id || "" } className={`card mb-3 shadow-sm ${ moment.duration(e.deadline.diff(moment())).asHours() > -6 ? "bg-danger text-white" : "" }`}>
             <div className="card-header">
                 <div className="d-flex flex-row justify-content-between">
                     <span className="h5 m-0">{ e.name || INVALID }</span>
-                    <span className="h5 m-0">{ e.subject || INVALID }{ !!e.group ? ` (${ e.group })` : "" }</span>
+                    <div className="d-flex">
+                        <span className="h5 m-0">{ e.subject || INVALID }{ !!e.group ? ` (${ e.group })` : "" }</span>
+                        <Link to={`/events/edit/${ e.id }`} role="button" className="my-auto ml-2">
+                            <img src={ IconEdit } alt="Add" width="16px" />
+                        </Link>
+                    </div>
                 </div>
             </div>
             <div className="card-body">
@@ -88,11 +99,11 @@ const Overview = () => {
 
     return (
         <div className="row">
-            <div className="col-12 col-md-8 mb-3 mb-md-0 order-2 order-md-1">
+            <div className="col-12 col-md-7 mb-3 mb-md-0 order-2 order-md-1">
                 <div className="d-flex flex-row justify-content-between mb-3">
                     <h2 className="m-0">Deadlines</h2>
                     <div className="my-auto">
-                        <Link to="/add/event" role="button">
+                        <Link to="/events/add" role="button">
                             <img src={ IconAdd } alt="Add" />
                         </Link>
                     </div>
@@ -104,11 +115,11 @@ const Overview = () => {
                 { eventHistoryViews }
             </div>
 
-            <div className="col-12 col-md-4 order-1 order-md-2">
+            <div className="col-12 col-md-5 order-1 order-md-2">
                 <div className="d-flex flex-row justify-content-between mb-3">
                     <h2 className="m-0">Nachrichten</h2>
                     <div className="my-auto">
-                        <Link to="/add/message" role="button">
+                        <Link to="/messages/add" role="button">
                             <img src={ IconAdd } alt="Add" />
                         </Link>
                     </div>

@@ -15,11 +15,15 @@ const App = () => {
 
             <BrowserRouter>
                 <Switch>
-                    <Route path="/add/event">
+                    <Route path="/events/add">
                         <CreateEvent />
                     </Route>
 
-                    <Route path="/add/message">
+                    <Route path="/events/edit/:eventId">
+                        <CreateEvent />
+                    </Route>
+
+                    <Route path="/messages/add">
                         <CreateMessage />
                     </Route>
 

@@ -1,13 +1,17 @@
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 import { firestore } from "firebase"
 
 import { db } from "./firebase"
-import {Link} from "react-router-dom"
+import {Link, useParams} from "react-router-dom"
+import moment from "moment"
 
 const CreateEvent = () => {
 
-    const [submitted, setSubmitted] = useState(false)
+    const { eventId } = useParams()
+
+    const [submitted, setSubmitted] = useState(!!eventId)
     const [values, setValues] = useState({
+        id: eventId,
         name: "",
         description: "",
         deadline: new Date().toISOString(),
@@ -15,8 +19,24 @@ const CreateEvent = () => {
         group: "V1/2"
     })
 
+    useEffect(!!eventId ? () => {
+        db.collection("Events").doc(eventId).get().then(doc => {
+
+            const currentData = doc.data();
+            currentData.id = doc.id;
+            currentData.deadline =  moment(currentData.deadline.toDate()).format("YYYY-MM-DDTkk:mm")
+
+            console.log(currentData)
+
+            setValues({...currentData})
+            setSubmitted(false)
+
+        }).catch(() => {
+
+        })
+    } : () => {}, [])
+
     const handleChange = (event) => {
-        console.log(event.target.value)
         setValues({...values, [event.target.name]: event.target.value})
     }
 
@@ -24,15 +44,22 @@ const CreateEvent = () => {
 
         setSubmitted(true)
         values.deadline = firestore.Timestamp.fromDate(new Date(values.deadline))
-        console.log(values.deadline)
 
-        db.collection("Events").add({
-            ...values
-        }).then((ref) => {
-            alert("Die Deadline sollte hinzugefügt sein.")
-        }).catch(err => {
-            alert("Fehler: " + err.toString())
-        })
+        const coll = db.collection("Events")
+
+        if (!!values.id) {
+            coll.doc(values.id).set(values).then((ref) => {
+                alert("Die Deadline sollte hinzugefügt sein.")
+            }).catch(err => {
+                alert("Fehler: " + err.toString())
+            })
+        } else {
+            coll.add(values).then((ref) => {
+                alert("Die Deadline sollte hinzugefügt sein.")
+            }).catch(err => {
+                alert("Fehler: " + err.toString())
+            })
+        }
 
         event.preventDefault();
     }
@@ -40,10 +67,18 @@ const CreateEvent = () => {
     return (
         <div className="row">
             <div className="col-12 col-md-6 offset-md-3">
+                <div className="alert alert-danger" role="alert">
+                    Bitte nur mit <span className="font-weight-bold">Google Chrome</span> verwenden. Firefox etc. unterstützen das Datums Feld nicht!
+                </div>
                 <form onSubmit={ handleSubmit }>
+                    <div className="form-group d-none">
+                        <label htmlFor="id">ID</label>
+                        <input id="id" name="id" type="text" value={ values.id } onChange={ handleChange } disabled={ true } className="form-control" />
+                    </div>
+
                     <div className="form-group">
                         <label htmlFor="name">Name</label>
-                        <input id="name" name="name" type="text" minLength="3" value={ values.title } onChange={ handleChange } disabled={ submitted } required={ true } className="form-control"/>
+                        <input id="name" name="name" type="text" minLength="3" value={ values.name } onChange={ handleChange } disabled={ submitted } required={ true } className="form-control"/>
                     </div>
 
                     <div className="form-group">
